@@ -19,7 +19,7 @@ export class JwtAuthController {
 	}
 
 	@MessagePattern('auth/jwt/updateAccess')
-	async updateAccess(@Payload() email: string) {
+	async updateAccess(@Payload('email') email: string) {
 		return await this.authService.getNewAccessAndRefreshToken({ email });
 	}
 }

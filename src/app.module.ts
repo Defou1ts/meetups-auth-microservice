@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { APP_FILTER } from '@nestjs/core';
 
 import { postgresConfigRegister } from './config/postgres.config';
 import { jwtConfigRegister } from './config/jwt.config';
@@ -14,6 +15,7 @@ import { User } from './users/models/users.model';
 import { JwtAuthModule } from './auth/jwt-auth.module';
 import { RolesModule } from './roles/roles.module';
 import { UsersModule } from './users/users.module';
+import { HttpExceptionFilter } from './exceptions/rpc.exception.filter';
 
 import type { PostgresConfig } from './config/postgres.config';
 
@@ -42,6 +44,11 @@ import type { PostgresConfig } from './config/postgres.config';
 		JwtAuthModule,
 	],
 	controllers: [],
-	providers: [],
+	providers: [
+		{
+			provide: APP_FILTER,
+			useClass: HttpExceptionFilter,
+		},
+	],
 })
 export class AppModule {}

@@ -19,6 +19,11 @@ export class UsersController {
 		return await this.usersService.getAllUsers();
 	}
 
+	@MessagePattern('users/getByEmail')
+	async getByEmail(@Payload('email') email: string) {
+		return await this.usersService.getUserByEmail(email);
+	}
+
 	@MessagePattern('users/setRole')
 	async setRole(@Payload() dto: SetRoleDto) {
 		return await this.usersService.setRole(dto);
