@@ -23,7 +23,6 @@ import type { PostgresConfig } from './config/postgres.config';
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			envFilePath: `.env`,
 			load: [postgresConfigRegister, jwtConfigRegister, encryptionConfigRegister],
 		}),
 		SequelizeModule.forRootAsync({
