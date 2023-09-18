@@ -1,12 +1,33 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { UserRoles } from 'src/users/constants/user-roles';
 
 import { RolesRepository } from './roles.repository';
 
+import type { OnModuleInit } from '@nestjs/common';
 import type { CreateRoleDto } from './dto/create-role.dto';
 
 @Injectable()
-export class RolesService {
+export class RolesService implements OnModuleInit {
 	constructor(private readonly rolesRepository: RolesRepository) {}
+
+	async onModuleInit() {
+		const userRole = await this.getRoleByValue(UserRoles.USER);
+		const organizerRole = await this.getRoleByValue(UserRoles.USER);
+
+		if (!userRole) {
+			await this.createRole({
+				value: UserRoles.USER,
+				description: 'User of meetups',
+			});
+		}
+
+		if (!organizerRole) {
+			await this.createRole({
+				value: UserRoles.ORGANIZER,
+				description: 'Organizer of meetups',
+			});
+		}
+	}
 
 	async createRole(dto: CreateRoleDto) {
 		const role = await this.rolesRepository.create(dto);
