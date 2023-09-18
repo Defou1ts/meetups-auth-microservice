@@ -11,19 +11,32 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { jwtConfigRegister, JwtConfig } from 'src/config/jwt.config';
 import { EncryptionConfig, encryptionConfigRegister } from 'src/config/encryption.config';
+import { UserRoles } from 'src/users/constants/user-roles';
 
+import type { OnModuleInit } from '@nestjs/common';
 import type { JwtPayload } from './interfaces/jwt-payload';
 import type { JwtLoginResponseDto } from './dto/jwt-login-response.dto';
 import type { CreateUserDto } from '../users/dto/create-user-dto';
 
 @Injectable()
-export class JwtAuthService {
+export class JwtAuthService implements OnModuleInit {
 	constructor(
 		@Inject(encryptionConfigRegister.KEY) private readonly encryptionConfig: EncryptionConfig,
 		@Inject(jwtConfigRegister.KEY) private readonly jwtConfig: JwtConfig,
 		private readonly userService: UsersService,
 		private readonly jwtService: JwtService,
 	) {}
+
+	async onModuleInit() {
+		const createdOrganizerEmail = 'admin@admin.com';
+		const organizer = await this.userService.getUserByEmail(createdOrganizerEmail);
+
+		if (!organizer) {
+			await this.registration({ email: createdOrganizerEmail, password: '1234' });
+			const createdOrganizer = await this.userService.getUserByEmail(createdOrganizerEmail);
+			await this.userService.setRole({ value: UserRoles.ORGANIZER, userId: createdOrganizer.id });
+		}
+	}
 
 	async login(userDto: CreateUserDto): Promise<JwtLoginResponseDto> {
 		const user = await this.validateUser(userDto);

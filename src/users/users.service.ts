@@ -33,6 +33,10 @@ export class UsersService {
 		return await this.usersRepository.getByEmail(email);
 	}
 
+	async getUserByRoleValue(value: UserRoles) {
+		return await this.usersRepository.getByRoleValue(value);
+	}
+
 	async updateUserRefreshTokenByEmail(email: string, hashedRefreshToken: string) {
 		const user = await this.usersRepository.getByEmail(email);
 

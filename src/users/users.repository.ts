@@ -4,6 +4,7 @@ import { Role } from 'src/roles/models/roles.model';
 
 import { User } from './models/users.model';
 
+import type { UserRoles } from './constants/user-roles';
 import type { CreateUserDto } from './dto/create-user-dto';
 
 @Injectable()
@@ -19,6 +20,10 @@ export class UsersRepository {
 			attributes: { exclude: ['roleId'] },
 			include: { model: Role },
 		});
+	}
+
+	async getByRoleValue(value: UserRoles) {
+		return await this.userModel.findOne({ where: { role: { value } }, include: { model: Role } });
 	}
 
 	async getByEmail(email: string) {

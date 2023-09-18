@@ -11,8 +11,9 @@ export class RolesService implements OnModuleInit {
 	constructor(private readonly rolesRepository: RolesRepository) {}
 
 	async onModuleInit() {
-		const userRole = await this.getRoleByValue(UserRoles.USER);
-		const organizerRole = await this.getRoleByValue(UserRoles.USER);
+		console.log('roles service init');
+		const userRole = await this.rolesRepository.getByValue(UserRoles.USER);
+		const organizerRole = await this.rolesRepository.getByValue(UserRoles.USER);
 
 		if (!userRole) {
 			await this.createRole({
