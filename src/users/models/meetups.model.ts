@@ -8,7 +8,8 @@ import { Tag } from './tags.model';
 interface MeetupCreationAttrs {
 	name: string;
 	description: string;
-	location: string;
+	latitude: number;
+	longitude: number;
 	date: Date;
 }
 
@@ -23,8 +24,11 @@ export class Meetup extends Model<Meetup, MeetupCreationAttrs> {
 	@Column({ type: DataType.STRING, unique: false, allowNull: false })
 	description: string;
 
-	@Column({ type: DataType.STRING, unique: false, allowNull: false })
-	location: string;
+	@Column({ type: DataType.DOUBLE, unique: false, allowNull: false })
+	latitude: number;
+
+	@Column({ type: DataType.DOUBLE, unique: false, allowNull: false })
+	longitude: number;
 
 	@Column({ type: DataType.DATE, unique: false, allowNull: false })
 	date: Date;
